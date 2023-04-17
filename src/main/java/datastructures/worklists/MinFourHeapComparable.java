@@ -42,8 +42,8 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
             data = copy;
         }
         size++;
-        // place at "size" and then check where it should belong
-        int i = percolateUp(size,work);
+        // place at "size-1" (0 indexed) and then check where it should belong
+        int i = percolateUp(size - 1,work);
         data[i] = work;
     }
 
@@ -52,7 +52,7 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         if (!hasWork()){
             throw new NoSuchElementException();
         }
-        return data[1];
+        return data[0];
     }
 
     @Override
@@ -60,10 +60,10 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
         if (!hasWork()){
             throw new NoSuchElementException();
         }
-        E ans = data[1];
+        E ans = data[0];
         //replace the empty root
-        int hole = percolateDown(1, data[size]);
-        data[hole] = data[size];
+        int hole = percolateDown(0, data[size - 1]);
+        data[hole] = data[size - 1];
         size--;
         return ans;
     }
@@ -81,19 +81,20 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
     }
 
     private int percolateDown(int hole, E val) {
-        int child = 4 * (hole - 1) + 2;
-        while (child <= size) {
+        // 0 indexed 4 heap
+        int child = 4 * hole + 1;
+        while (child < size) {
             int minChild = child;
             for (int i = 1; i < 4; i++) {
                 int nextChild = child + i;
-                if (nextChild <= size && data[nextChild].compareTo(data[minChild]) < 0) {
+                if (nextChild < size && data[nextChild].compareTo(data[minChild]) < 0) {
                     minChild = nextChild;
                 }
             }
             if (data[minChild].compareTo(val) < 0) {
                 data[hole] = data[minChild];
                 hole = minChild;
-                child = 4 * (hole - 1) + 2;
+                child = 4 * hole + 1;
             } else {
                 break;
             }
@@ -103,16 +104,12 @@ public class MinFourHeapComparable<E extends Comparable<E>> extends PriorityWork
 
 
     private int percolateUp(int hole, E val){
-        // 1 indexed 4 heap
-        while (hole > 1 && val.compareTo(data[(hole-2)/4+1]) < 0){
-            data[hole] = data[(hole-2)/4+1];
-            hole =  (hole-2)/4+1;
+        // 0 indexed 4 heap
+        while (hole > 0 && val.compareTo(data[(hole-1)/4]) < 0){
+            data[hole] = data[(hole-1)/4];
+            hole = (hole-1)/4;
         }
         return hole;
     }
 
-    public int compareTo(E val){
-        // how do I compare this?
-        return this.compareTo(val);
-    }
 }
