@@ -191,6 +191,7 @@ public class MinFourHeapComparableTests {
         Object[] heapData2 = getField(heap, "data");
         String heapStr2 = Arrays.toString(heapData2);
         String heapExp2 = "[15, 16, 103, 107, 17, 108, 100, 101, 102, 106, 105,";
+
         assertTrue(heapStr.contains(heapExp));
         assertTrue(heapStr2.contains(heapExp2));
     }
