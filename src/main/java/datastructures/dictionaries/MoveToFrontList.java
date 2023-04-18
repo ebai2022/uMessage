@@ -51,7 +51,7 @@ public class MoveToFrontList<K, V> extends DeletelessDictionary<K, V> {
                     head.next = oldHead;
                     V prevVal = (V) head.value;
                     head.value = value;
-                    System.out.println("value swapped");
+                    //System.out.println("value swapped");
                     return prevVal;
                 }
                 curr = curr.next;
