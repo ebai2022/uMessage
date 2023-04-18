@@ -69,4 +69,23 @@ public class MoveToFrontListTests {
 		assertNotNull(list.find("00851"));
 		assertEquals(list.find("00851").intValue(), 4260);
 	}
+
+	@Test()
+	@Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
+	public void confused(){
+		MoveToFrontList<Integer, Integer> list = new MoveToFrontList<Integer, Integer>();
+
+		int[] arr = {6, 5, 10, 14, 10, 31, 10, 13, 10, 10, 12, 10, 14, 10, 10, 11, 10, 14, 9, 8, 3, 2, 1, 0, 7, 4};
+		for(int i = 0; i < arr.length; i++) {
+			Integer oldValue = list.find(arr[i]);
+			if (oldValue == null) {
+				list.insert(arr[i], 1);
+			} else {
+				list.insert(arr[i], 1 + oldValue);
+			}
+		}
+		for (Item<Integer, Integer> i : list){
+			System.out.println(i);
+		}
+	}
 }
