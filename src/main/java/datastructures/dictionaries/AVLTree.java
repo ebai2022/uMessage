@@ -1,6 +1,9 @@
 package datastructures.dictionaries;
 
+import cse332.datastructures.containers.Item;
 import cse332.datastructures.trees.BinarySearchTree;
+
+import java.lang.reflect.Array;
 
 /**
  * AVLTree must be a subclass of BinarySearchTree<E> and must use
@@ -28,4 +31,74 @@ import cse332.datastructures.trees.BinarySearchTree;
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
     // TODO: Implement me!
+
+    public class AVLNode extends BSTNode{
+        public int height;
+        public AVLNode(K key, V value, int height){
+            super(key, value);
+            this.height = height;
+        }
+    }
+
+    @Override
+    public V insert(K key, V value) {
+        if (key == null || value == null) {
+            throw new IllegalArgumentException();
+        }
+        AVLNode prev = null;
+        AVLNode current = (AVLNode) this.root;
+
+        int height = 0;
+        int child = -1;
+
+        while (current != null) {
+            int direction = Integer.signum(key.compareTo(current.key));
+
+            // We found the key!
+            if (direction == 0) {
+                break;
+            }
+            else {
+                // direction + 1 = {0, 2} -> {0, 1}
+                child = Integer.signum(direction + 1);
+                prev = current;
+                current = (AVLNode) current.children[child];
+                // ALSO NEED TO UPDATE THE OTHER HEIGHTS AFTER SWAPPING
+                height++;
+            }
+        }
+
+        current = new AVLNode(key, value, height);
+        if (this.root == null) {
+            this.root = current;
+        }
+        else {
+            assert(child >= 0); // child should have been set in the loop
+            // above
+            // swap here? check stuff
+            prev.children[child] = current;
+        }
+        V oldValue = current.value;
+        if (oldValue == null){
+            this.size++;
+        }
+        current.value = value;
+        return oldValue;
+    }
+
+    public void updateHeights(AVLNode root, int height){
+
+    }
+
+    // can we combine cases one and four?
+    public AVLNode caseOne(AVLNode root){
+
+        return root;
+    }
+
+    // can we just do two single rotations?
+    public AVLNode caseTwo(AVLNode root){
+
+        return root;
+    }
 }
