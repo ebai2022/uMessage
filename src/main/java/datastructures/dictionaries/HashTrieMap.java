@@ -42,36 +42,18 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             throw new IllegalArgumentException();
         }
         HashTrieNode node = (HashTrieNode)this.root;
-        int depth = 1;
-        V prev = node.value;
-        if (key.size() == 0){
-            if (node.value == null){
-                this.size++;
-            }
-            node.value = value;
-            return prev;
-        }
         for (A part : key){
-            HashTrieNode children = node.pointers.get(part);
-            if (children == null && depth != key.size()){
+            if (!node.pointers.containsKey(part)){
                 node.pointers.put(part, new HashTrieNode());
-            } else if (depth == key.size()){
-                if (children != null){
-                    prev = children.value;
-                    if (prev == null){
-                        this.size++;
-                    }
-                    children.value = value;
-                    return prev;
-                } else{
-                    node.pointers.put(part, new HashTrieNode(value));
-                    this.size++;
-                }
             }
-            depth++;
             node = node.pointers.get(part);
         }
-        return null;
+        V prev = node.value;
+        node.value = value;
+        if (prev == null){
+            this.size++;
+        }
+        return prev;
     }
 
     @Override
@@ -80,20 +62,13 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             throw new IllegalArgumentException();
         }
         HashTrieNode node = (HashTrieNode)this.root;
-        int depth = 1;
-        if (key.size() == 0){
-            return node.value;
-        }
         for (A part : key){
-            if (node.pointers.get(part) != null){
-                if (depth == key.size()){
-                    return node.pointers.get(part).value;
-                }
-                node = node.pointers.get(part);
+            if (!node.pointers.containsKey(part)){
+                return null;
             }
-            depth++;
+            node = node.pointers.get(part);
         }
-        return null;
+        return node.value;
     }
 
     @Override
@@ -101,10 +76,10 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         if (key == null){
             throw new IllegalArgumentException();
         }
-        HashTrieNode node = (HashTrieNode) this.root;
-        if (this.size() == 0){
+        if (this.size == 0){
             return false;
         }
+        HashTrieNode node = (HashTrieNode) this.root;
         for (A part : key){
             HashTrieNode children = node.pointers.get(part);
             if (children == null){
