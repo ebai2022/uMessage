@@ -67,7 +67,6 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
 
     @Override
     public void update(int i, E value) {
-        // check the size here? BE CAREFUL - DO I NEED TO UPDATE SIZE? check a default value?
         if (size == 0){
             throw new NoSuchElementException();
         }
@@ -90,11 +89,14 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     public void clear() {
         array = (E[])new Object[capacity()];
         size = 0;
+        front = 0;
+        end = 0;
     }
 
     @Override
     public int compareTo(FixedSizeFIFOWorkList<E> other) {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
+        // LOOK AT STRINGS COMPARETO
         throw new NotYetImplementedException();
     }
 
@@ -108,11 +110,20 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
             return false;
         } else {
             // Uncomment the line below for p2 when you implement equals
-            // FixedSizeFIFOWorkList<E> other = (FixedSizeFIFOWorkList<E>) obj;
+            FixedSizeFIFOWorkList<E> other = (FixedSizeFIFOWorkList<E>) obj;
 
             // Your code goes here
-
-            throw new NotYetImplementedException();
+            // instanceof already handles the null case
+            // checks size
+            if (this.size() != other.size()){
+                return false;
+            }
+            for (int i = 0; i < this.size(); i++){
+                if (!this.peek(i).equals(other.peek(i))){
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
