@@ -102,7 +102,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
             throw new IllegalArgumentException();
         }
         HashTrieNode node = (HashTrieNode) this.root;
-        if (node == null){
+        if (this.size() == 0){
             return false;
         }
         for (A part : key){

@@ -16,7 +16,7 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     private int end;
     public CircularArrayFIFOQueue(int capacity) {
         super(capacity);
-        array = (E[])new Object[capacity];
+        array = (E[])new Comparable[capacity];
         size = 0;
         front = 0;
         end = 0;
@@ -57,7 +57,6 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
         if (size() == 0){
             throw new NoSuchElementException();
         }
-        // set removed element to a default value? e.g. null
         E data = array[front];
         array[front] = null;
         front = (front + 1) % capacity();
@@ -87,7 +86,7 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
 
     @Override
     public void clear() {
-        array = (E[])new Object[capacity()];
+        array = (E[])new Comparable[capacity()];
         size = 0;
         front = 0;
         end = 0;
@@ -96,8 +95,19 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     @Override
     public int compareTo(FixedSizeFIFOWorkList<E> other) {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
-        // LOOK AT STRINGS COMPARETO
-        throw new NotYetImplementedException();
+        // HOW TO COMPARE DIFFERENT SIZES?
+        int minSize = Math.min(this.size(), other.size());
+        for (int i = 0; i < minSize; i++){
+            if (this.peek(i).compareTo(other.peek(i)) != 0){
+                return this.peek(i).compareTo(other.peek(i));
+            }
+        }
+        if (this.size() < other.size()){
+            return -1;
+        } else if (this.size() > other.size()) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override
@@ -130,6 +140,10 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     @Override
     public int hashCode() {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
-        throw new NotYetImplementedException();
+        int hashCode = 0;
+        for (int i = this.size() - 1; i >= 0; i--){
+            hashCode += (this.peek(i).hashCode() + hashCode) * 37;
+        }
+        return hashCode;
     }
 }
