@@ -4,6 +4,7 @@ import cse332.datastructures.containers.Item;
 import cse332.datastructures.trees.BinarySearchTree;
 
 import java.lang.reflect.Array;
+import java.util.NoSuchElementException;
 
 /**
  * AVLTree must be a subclass of BinarySearchTree<E> and must use
@@ -31,7 +32,7 @@ import java.lang.reflect.Array;
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
     // TODO: Implement me!
-
+    private V prevVal = null;
     public class AVLNode extends BSTNode{
         public int height;
         public AVLNode(K key, V value, int height){
@@ -45,60 +46,166 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         }
-        AVLNode prev = null;
-        AVLNode current = (AVLNode) this.root;
+        root = insert(key, value, (AVLNode) root);
+        // add value change!
+        return prevVal;
+    }
 
-        int height = 0;
-        int child = -1;
-
-        while (current != null) {
-            int direction = Integer.signum(key.compareTo(current.key));
-
-            // We found the key!
-            if (direction == 0) {
-                break;
-            }
-            else {
-                // direction + 1 = {0, 2} -> {0, 1}
-                child = Integer.signum(direction + 1);
-                prev = current;
-                current = (AVLNode) current.children[child];
-                // ALSO NEED TO UPDATE THE OTHER HEIGHTS AFTER SWAPPING
-                height++;
-            }
-        }
-
-        current = new AVLNode(key, value, height);
-        if (this.root == null) {
-            this.root = current;
-        }
-        else {
-            assert(child >= 0); // child should have been set in the loop
-            // above
-            // swap here? check stuff
-            prev.children[child] = current;
-        }
-        V oldValue = current.value;
-        if (oldValue == null){
+    private AVLNode insert(K key, V value, AVLNode root){
+        // we have found the empty spot to insert the root
+        if (root == null){
+            root = new AVLNode(key, value, 0);
             this.size++;
+            return root;
         }
-        current.value = value;
-        return oldValue;
-    }
-
-    public void updateHeights(AVLNode root, int height){
-
-    }
-
-    // can we combine cases one and four?
-    public AVLNode caseOne(AVLNode root){
-
+        int direction = Integer.signum(key.compareTo(root.key));
+        // we just need to replace to duplicate
+        if (direction == 0) {
+            prevVal = root.value;
+            root.value = value;
+            return root;
+        } else{
+            int child = Integer.signum(direction + 1);
+            root.children[child] = insert(key, value, (AVLNode) root.children[child]);
+        }
+        root.height = maxHeight((AVLNode) root.children[0], (AVLNode) root.children[1]) + 1;
+        int swapCase = findCase(root);
+        if (swapCase == 1){
+            root = rotateWithLeft(root);
+        } else if (swapCase == 2){
+            root.children[0] = rotateWithRight((AVLNode) root.children[0]);
+            root = rotateWithLeft(root);
+        } else if (swapCase == 3){
+            root.children[1] = rotateWithLeft((AVLNode) root.children[1]);
+            root = rotateWithRight(root);
+        } else if (swapCase == 4){
+            root = rotateWithRight(root);
+        }
         return root;
     }
 
-    // can we just do two single rotations?
-    public AVLNode caseTwo(AVLNode root){
+    private int findCase(AVLNode root){
+        AVLNode leftSubtree = (AVLNode) root.children[0];
+        AVLNode rightSubtree = (AVLNode) root.children[1];
+        // we only have a right subtree
+        if (leftSubtree == null){
+            // we have an imbalance if one side null (-1) and the other size is greater than 0 (difference is >1)
+            if (rightSubtree.height > 0){
+                AVLNode leftSubOfChild = (AVLNode) rightSubtree.children[0];
+                AVLNode rightSubOfChild = (AVLNode) rightSubtree.children[1];
+                if (leftSubOfChild == null){
+                    return 4;
+                } else if (rightSubOfChild == null){
+                    return 3;
+                } else if (leftSubOfChild.height > rightSubOfChild.height){
+                    return 3;
+                } else if (leftSubOfChild.height < rightSubOfChild.height){
+                    return 4;
+                } else{
+                    throw new NoSuchElementException("You screwed up somehow! No cases if these are equal");
+                }
+            }
+        }
+        // we only have a left subtree
+        else if (rightSubtree == null){
+            // we have an imbalance if one side null (-1) and the other size is greater than 0 (difference is >1)
+            if (leftSubtree.height > 0){
+                AVLNode leftSubOfChild = (AVLNode) leftSubtree.children[0];
+                AVLNode rightSubOfChild = (AVLNode) leftSubtree.children[1];
+                if (leftSubOfChild == null){
+                    return 2;
+                } else if (rightSubOfChild == null){
+                    return 1;
+                } else if (leftSubOfChild.height > rightSubOfChild.height){
+                    return 1;
+                } else if (leftSubOfChild.height < rightSubOfChild.height){
+                    return 2;
+                } else{
+                    throw new NoSuchElementException("You screwed up somehow! No cases if these are equal");
+                }
+            }
+        }
+        // we have both subtrees
+        else{
+            // we know that the imbalance is in the left subtree
+            if (leftSubtree.height - rightSubtree.height > 1){
+                AVLNode leftSubOfChild = (AVLNode) leftSubtree.children[0];
+                AVLNode rightSubOfChild = (AVLNode) leftSubtree.children[1];
+                if (leftSubOfChild == null){
+                    return 2;
+                } else if (rightSubOfChild == null){
+                    return 1;
+                } else if (leftSubOfChild.height > rightSubOfChild.height){
+                    return 1;
+                } else if (leftSubOfChild.height < rightSubOfChild.height){
+                    return 2;
+                } else{
+                    throw new NoSuchElementException("You screwed up somehow! No cases if these are equal");
+                }
+            }
+            // we know the imbalance is in the right subtree
+            else if (rightSubtree.height - leftSubtree.height > 1){
+                AVLNode leftSubOfChild = (AVLNode) rightSubtree.children[0];
+                AVLNode rightSubOfChild = (AVLNode) rightSubtree.children[1];
+                if (leftSubOfChild == null){
+                    return 4;
+                } else if (rightSubOfChild == null){
+                    return 3;
+                } else if (leftSubOfChild.height > rightSubOfChild.height){
+                    return 3;
+                } else if (leftSubOfChild.height < rightSubOfChild.height){
+                    return 4;
+                } else{
+                    throw new NoSuchElementException("You screwed up somehow! No cases if these are equal");
+                }
+            }
+        }
+        return 0;
+    }
 
+    private AVLNode rotateWithRight(AVLNode root){
+        // right child
+        AVLNode temp = (AVLNode) root.children[1];
+        // taking the child's left subtree
+        root.children[1] = temp.children[0];
+        // taking the root as its left subtree
+        temp.children[0] = root;
+
+        // null cases
+        root.height = maxHeight(((AVLNode) root.children[1]), ((AVLNode) root.children[0])) + 1;
+        temp.height = maxHeight(((AVLNode) temp.children[1]), ((AVLNode) temp.children[0])) + 1;
+
+        // reassigning root to the top
+        root = temp;
         return root;
+    }
+
+    private AVLNode rotateWithLeft(AVLNode root){
+        // left child
+        AVLNode temp = (AVLNode) root.children[0];
+        // taking the child's right subtree
+        root.children[0] = temp.children[1];
+        // taking the root as its right subtree
+        temp.children[1] = root;
+
+        // null cases
+        root.height = maxHeight(((AVLNode) root.children[1]), ((AVLNode) root.children[0])) + 1;
+        temp.height = maxHeight(((AVLNode) temp.children[1]), ((AVLNode) temp.children[0])) + 1;
+
+        // reassigning root to the top
+        root = temp;
+        return root;
+    }
+
+    private int maxHeight(AVLNode leftNode, AVLNode rightNode){
+        if (leftNode == null && rightNode == null){
+            return -1;
+        } else if (leftNode == null){
+            return rightNode.height;
+        } else if (rightNode == null){
+            return leftNode.height;
+        } else{
+            return Math.max(leftNode.height, rightNode.height);
+        }
     }
 }
