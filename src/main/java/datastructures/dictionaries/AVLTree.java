@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
     // TODO: Implement me!
-    private V prevVal = null;
+    private V prevVal;
     public class AVLNode extends BSTNode{
         public int height;
         public AVLNode(K key, V value, int height){
@@ -46,6 +46,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         }
+        prevVal = null;
         root = insert(key, value, (AVLNode) root);
         // add value change!
         return prevVal;
