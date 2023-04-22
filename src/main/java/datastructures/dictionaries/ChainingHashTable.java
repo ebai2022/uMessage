@@ -34,12 +34,17 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     @Override
     public V insert(K key, V value) {
-        throw new NotYetImplementedException();
+        int hashcode = key.hashCode() % size();
+        Dictionary<K, V> separateChain = newChain.get();
+
+        return find(key);
     }
 
     @Override
     public V find(K key) {
-        throw new NotYetImplementedException();
+        int hashcode = key.hashCode() % size();
+        Dictionary<K, V> separateChain = newChain.get();
+        return separateChain.find(key);
     }
 
     @Override
@@ -47,6 +52,10 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         throw new NotYetImplementedException();
     }
 
+    // for when my table gets too big for my PRIME_SIZES list to handle
+    private int nextPrime(){
+        return 17;
+    }
     /**
      * Temporary fix so that you can debug on IntelliJ properly despite a broken iterator
      * Remove to see proper String representation (inherited from Dictionary)

@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
     // TODO: Implement me!
-    private V prevVal;
+    private V prevVal; // keeping track of the previous value so recursion is simplified
     public class AVLNode extends BSTNode{
         public int height;
         public AVLNode(K key, V value, int height){
@@ -46,6 +46,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         }
+        // I could also use BST find here instead of using a field
         prevVal = null;
         root = insert(key, value, (AVLNode) root);
         // add value change!
@@ -69,7 +70,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             int child = Integer.signum(direction + 1);
             root.children[child] = insert(key, value, (AVLNode) root.children[child]);
         }
+        // updates the current root height
         root.height = maxHeight((AVLNode) root.children[0], (AVLNode) root.children[1]) + 1;
+
+        // checks if a swap is needed. If not, just returns
+        // should I track a boolean here or something else? since after finishing the swap I shouldn't need to check it
+        // again because I perform a maximum of one combo of swaps per rotation
         int swapCase = findCase(root);
         if (swapCase == 1){
             root = rotateWithLeft(root);
@@ -85,6 +91,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return root;
     }
 
+    // checks which case my rotation is. returns 0 if no rotation is needed
     private int findCase(AVLNode root){
         AVLNode leftSubtree = (AVLNode) root.children[0];
         AVLNode rightSubtree = (AVLNode) root.children[1];
@@ -164,6 +171,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return 0;
     }
 
+    // rotates the current node with its right child
     private AVLNode rotateWithRight(AVLNode root){
         // right child
         AVLNode temp = (AVLNode) root.children[1];
@@ -172,7 +180,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         // taking the root as its left subtree
         temp.children[0] = root;
 
-        // null cases
+        // updating heights
         root.height = maxHeight(((AVLNode) root.children[1]), ((AVLNode) root.children[0])) + 1;
         temp.height = maxHeight(((AVLNode) temp.children[1]), ((AVLNode) temp.children[0])) + 1;
 
@@ -181,6 +189,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return root;
     }
 
+    // rotates the current node with its left child
     private AVLNode rotateWithLeft(AVLNode root){
         // left child
         AVLNode temp = (AVLNode) root.children[0];
@@ -189,7 +198,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         // taking the root as its right subtree
         temp.children[1] = root;
 
-        // null cases
+        //updating heights
         root.height = maxHeight(((AVLNode) root.children[1]), ((AVLNode) root.children[0])) + 1;
         temp.height = maxHeight(((AVLNode) temp.children[1]), ((AVLNode) temp.children[0])) + 1;
 
@@ -198,7 +207,9 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return root;
     }
 
+    // finds the height of the current node (max of the two nodes under it)
     private int maxHeight(AVLNode leftNode, AVLNode rightNode){
+        // if my node is a leaf node
         if (leftNode == null && rightNode == null){
             return -1;
         } else if (leftNode == null){
