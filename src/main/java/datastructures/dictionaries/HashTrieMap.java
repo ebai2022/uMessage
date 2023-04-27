@@ -1,9 +1,11 @@
 package datastructures.dictionaries;
 
 import cse332.exceptions.NotYetImplementedException;
+import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,19 +17,25 @@ import java.util.Map.Entry;
  * for method specifications.
  */
 public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> extends TrieMap<A, K, V> {
-    public class HashTrieNode extends TrieNode<Map<A, HashTrieNode>, HashTrieNode> {
+    public class HashTrieNode extends TrieNode<ChainingHashTable<A, HashTrieNode>, HashTrieNode> {
         public HashTrieNode() {
             this(null);
         }
 
         public HashTrieNode(V value) {
-            this.pointers = new HashMap<A, HashTrieNode>();
+            this.pointers = new ChainingHashTable<A, HashTrieNode>(MoveToFrontList::new);
             this.value = value;
         }
 
         @Override
         public Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>> iterator() {
-            return pointers.entrySet().iterator();
+            Iterator itr = pointers.iterator();
+            Dictionary d = new ChainingHashTable<A, HashTrieNode>(MoveToFrontList::new);
+            while (itr.hasNext()){
+                AbstractMap.SimpleEntry i = (AbstractMap.SimpleEntry) itr.next();
+                d.insert(i.getKey(), i.getValue());
+            }
+            return d.iterator();
         }
     }
 
@@ -43,10 +51,10 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         HashTrieNode node = (HashTrieNode)this.root;
         for (A part : key){
-            if (!node.pointers.containsKey(part)){
-                node.pointers.put(part, new HashTrieNode());
+            if (node.pointers.find(part) == null){
+                node.pointers.insert(part, new HashTrieNode());
             }
-            node = node.pointers.get(part);
+            node = node.pointers.find(part);
         }
         V prev = node.value;
         node.value = value;
@@ -63,10 +71,10 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         HashTrieNode node = (HashTrieNode)this.root;
         for (A part : key){
-            if (!node.pointers.containsKey(part)){
+            if (node.pointers.find(part) == null){
                 return null;
             }
-            node = node.pointers.get(part);
+            node = node.pointers.find(part);
         }
         return node.value;
     }
@@ -81,7 +89,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         HashTrieNode node = (HashTrieNode) this.root;
         for (A part : key){
-            HashTrieNode children = node.pointers.get(part);
+            HashTrieNode children = node.pointers.find(part);
             if (children == null){
                 return false;
             }
@@ -104,7 +112,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
                 deleteAlphabet = part;
                 i++;
             }
-            HashTrieNode children = node.pointers.get(part);
+            HashTrieNode children = node.pointers.find(part);
             if (children == null){
                 return;
             }
@@ -119,16 +127,15 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
         node.value = null;
         if (deleteUnder != null && node.pointers.isEmpty()){
-            deleteUnder.pointers.remove(deleteAlphabet);
+            deleteUnder.pointers.delete(deleteAlphabet);
         } else if (deleteUnder == null && node.pointers.isEmpty()){
             deleteUnder = (HashTrieNode) this.root;
-            deleteUnder.pointers.remove(deleteAlphabet);
+            deleteUnder.pointers.delete(deleteAlphabet);
         }
     }
 
     @Override
     public void clear() {
-        root = new HashTrieNode();
-        this.size = 0;
+        throw new UnsupportedOperationException();
     }
 }
