@@ -10,6 +10,19 @@ public class QuickSort {
     }
 
     public static <E> void sort(E[] array, Comparator<E> comparator) {
-        throw new NotYetImplementedException();
+        // pick pivot out of 3 (arr[lo] arr[hi-lo] arr[hi-lo / 2])
+        // partition data into elements less than the pivot (A), the pivot (B),
+        // and elements greater than the pivot (C)
+        // recursively sort A and C
     }
+
+    /*
+    public <E> void quicksort (E[] arr, int hi, int lo){
+        if (hi - lo < 10){
+            insertionSort(arr,lo,hi);
+        } else{
+
+        }
+    }
+    */
 }

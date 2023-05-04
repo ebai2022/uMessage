@@ -1,6 +1,8 @@
 package p2.sorts;
 
 import cse332.exceptions.NotYetImplementedException;
+import cse332.interfaces.worklists.WorkList;
+import datastructures.worklists.MinFourHeap;
 
 import java.util.Comparator;
 
@@ -10,6 +12,12 @@ public class HeapSort {
     }
 
     public static <E> void sort(E[] array, Comparator<E> comparator) {
-        throw new NotYetImplementedException();
+        WorkList<E> heap = new MinFourHeap<>(comparator);
+        for (int i = 0; i < array.length; i++){
+            heap.add(array[i]);
+        }
+        for (int i = 0; i < array.length; i++){
+            array[i] = heap.next();
+        }
     }
 }

@@ -113,27 +113,4 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
         return hole;
     }
 
-    /*
-    private class HeapSort implements Comparator<MinFourHeap> {
-        @Override
-        public int compare(MinFourHeap o1, MinFourHeap o2) {
-            return 0;
-        }
-    }
-
-    private class QuickSort implements Comparator<MinFourHeap> {
-        @Override
-        public int compare(MinFourHeap o1, MinFourHeap o2) {
-            return 0;
-        }
-    }
-
-    private class TopKSort implements Comparator<MinFourHeap> {
-        @Override
-        public int compare(MinFourHeap o1, MinFourHeap o2) {
-            return 0;
-        }
-    }
-
-     */
 }
