@@ -15,9 +15,19 @@ public class QuickSort {
         // partition data into elements less than the pivot (A), the pivot (B),
         // and elements greater than the pivot (C)
         // recursively sort A and C
-        // quicksort(array, array[0], array[array.length - 1], comparator);
-        partition(array, 0, array.length - 1, comparator);
+        quicksort(array, 0, array.length - 1, comparator);
+
     }
+
+    public static <E> void quicksort(E[] arr, int lo, int hi, Comparator<E> c){
+        if (lo < hi){
+            int pivot = pickPivot(arr, lo, hi, c);
+            partition(arr, lo, pivot, hi, c);
+            quicksort(arr, lo, pivot - 1, c);
+            quicksort(arr, pivot + 1, hi, c);
+        }
+    }
+
 
     public static <E> int pickPivot (E[] arr, int lo, int hi, Comparator<E> c){
         //if (lo < 0 || hi > arr.length){
@@ -29,16 +39,12 @@ public class QuickSort {
             return lo;
         } else if ((c.compare(arr[hi], arr[lo]) < 0 && c.compare(arr[hi], arr[mid]) > 0) ||
                 (c.compare(arr[hi], arr[lo]) > 0 && c.compare(arr[hi], arr[mid]) < 0)){
-            return mid;
+            return hi;
         }
         return mid;
     }
 
-    public static <E> void partition(E[] arr, int lo, int hi, Comparator<E> comparator){
-        if (lo >= hi){
-            return;
-        }
-        int pivot = pickPivot(arr, lo, hi - 1, comparator);
+    public static <E> void partition(E[] arr, int lo, int pivot, int hi, Comparator<E> comparator){
         E pivotVal = arr[pivot];
         arr[pivot] = arr[lo];
         arr[lo] = pivotVal;
@@ -57,7 +63,5 @@ public class QuickSort {
         }
         arr[lo] = arr[i];
         arr[i] = pivotVal;
-        partition(arr, lo, pivot - 1, comparator);
-        partition(arr, pivot + 1, hi, comparator);
     }
 }
