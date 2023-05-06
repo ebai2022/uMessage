@@ -11,10 +11,6 @@ public class QuickSort {
     }
 
     public static <E> void sort(E[] array, Comparator<E> comparator) {
-        // pick pivot out of 3 (arr[lo] arr[hi-lo] arr[hi-lo / 2])
-        // partition data into elements less than the pivot (A), the pivot (B),
-        // and elements greater than the pivot (C)
-        // recursively sort A and C
         quicksort(array, 0, array.length - 1, comparator);
 
     }
