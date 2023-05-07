@@ -7,6 +7,7 @@ import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,5 +48,38 @@ public class ChainingHashTableTests {
 		assertEquals(list.size(), n);
 		assertNotNull(list.find("00851"));
 		assertEquals(4260, (int) list.find("00851"));
+	}
+
+	@Test()
+	@Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
+	public void fuzztest(){
+		Random rand = new Random();
+		ChainingHashTable<Integer, String> map = new ChainingHashTable<>(MoveToFrontList::new);
+
+		for (int i = 0; i < 1000; i++) {
+			int key = rand.nextInt();
+			String value = getRandomString(rand.nextInt(100));
+
+			switch (rand.nextInt(5)) {
+				case 0:
+					map.insert(key, value);
+					break;
+				case 1:
+					map.find(key);
+					break;
+				case 2:
+					map.find(key);
+					break;
+			}
+		}
+	}
+
+	private static String getRandomString(int length) {
+		Random rand = new Random();
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < length; i++) {
+			builder.append((char) (rand.nextInt(26) + 'a'));
+		}
+		return builder.toString();
 	}
 }
