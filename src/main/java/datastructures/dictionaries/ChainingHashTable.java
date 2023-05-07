@@ -73,9 +73,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         // finding the index of the array to check
         int index = key.hashCode() % tableSize;
         // finding the generic dictionary to check whether the key exists
-        if (index > tableSize - 1){
-            return null;
-        }
         Dictionary<K, V> list = hashTable[index];
         // using an iterator to go through this dictionary
         Iterator<Item<K, V>> itr = list.iterator();
