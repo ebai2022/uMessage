@@ -17,6 +17,22 @@ public class TopKSort {
     public static <E> void sort(E[] array, int k, Comparator<E> comparator) {
         WorkList<E> heap = new MinFourHeap<>(comparator);
         for (int i = 0; i < array.length; i++){
+            if (heap.size() < k){
+                heap.add(array[i]);
+            } else if (heap.size() == k && comparator.compare(array[i], heap.peek()) > 0){
+                heap.next();
+                heap.add(array[i]);
+            }
+        }
+        for (int i = 0; i < array.length; i++){
+            if (i < k){
+                array[i] = heap.next();
+            } else{
+                array[i] = null;
+            }
+        }
+        /*
+        for (int i = 0; i < array.length; i++){
             heap.add(array[i]);
         }
         int numToTakeOut = heap.size() - k;
@@ -27,5 +43,7 @@ public class TopKSort {
         for (int i = 0; i < k; i++){
             array[i] = heap.next();
         }
+
+         */
     }
 }

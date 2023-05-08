@@ -53,9 +53,9 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         }
         // finding the index of the array to check
         int index = Math.abs(key.hashCode() % tableSize);
-        System.out.println(key.hashCode());
+        //System.out.println(key.hashCode());
         // use whatever dictionaries insert method
-        System.out.println("inserting at " + index);
+        //System.out.println("inserting at " + index);
         V oldVal = hashTable[index].insert(key, value);
         if (oldVal == null){
             this.size++;
@@ -75,8 +75,8 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         // finding the index of the array to check
         int index = Math.abs(key.hashCode() % tableSize);
         // finding the generic dictionary to check whether the key exists
-        System.out.println(key.hashCode());
-        System.out.println("finding at " + index);
+        //System.out.println(key.hashCode());
+        //System.out.println("finding at " + index);
         Dictionary<K, V> list = hashTable[index];
         // using an iterator to go through this dictionary
         Iterator<Item<K, V>> itr = list.iterator();

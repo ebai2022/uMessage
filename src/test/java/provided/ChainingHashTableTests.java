@@ -2,6 +2,7 @@ package provided;
 
 import cse332.datastructures.containers.Item;
 import cse332.interfaces.misc.Dictionary;
+import datastructures.dictionaries.AVLTree;
 import datastructures.dictionaries.ChainingHashTable;
 import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,30 @@ public class ChainingHashTableTests {
 	public void fuzztest(){
 		Random rand = new Random();
 		ChainingHashTable<Integer, String> map = new ChainingHashTable<>(MoveToFrontList::new);
+
+		for (int i = 0; i < 1000; i++) {
+			int key = rand.nextInt();
+			String value = getRandomString(rand.nextInt(100));
+
+			switch (rand.nextInt(5)) {
+				case 0:
+					map.insert(key, value);
+					break;
+				case 1:
+					map.find(key);
+					break;
+				case 2:
+					map.find(key);
+					break;
+			}
+		}
+	}
+
+	@Test()
+	@Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
+	public void fuzztest2(){
+		Random rand = new Random();
+		ChainingHashTable<Integer, String> map = new ChainingHashTable<>(AVLTree<Integer,String>::new);
 
 		for (int i = 0; i < 1000; i++) {
 			int key = rand.nextInt();

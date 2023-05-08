@@ -1,9 +1,14 @@
 package provided;
 
+import datastructures.dictionaries.AVLTree;
+import datastructures.dictionaries.ChainingHashTable;
+import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import p2.sorts.TopKSort;
 
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,5 +37,11 @@ public class TopKSortTests {
 		for(int i = 0; i < K; i++) {
 			assertEquals(arr_sorted[i], arr[i]);
 		}
+	}
+
+	@Test()
+	@Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
+	public void fuzztest(){
+
 	}
 }
