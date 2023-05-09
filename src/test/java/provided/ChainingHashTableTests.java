@@ -8,6 +8,7 @@ import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +57,7 @@ public class ChainingHashTableTests {
 	public void fuzztest(){
 		Random rand = new Random();
 		ChainingHashTable<Integer, String> map = new ChainingHashTable<>(MoveToFrontList::new);
-
+		HashMap<Integer, String> map2 = new HashMap<Integer, String>();
 		for (int i = 0; i < 1000; i++) {
 			int key = rand.nextInt();
 			String value = getRandomString(rand.nextInt(100));
@@ -64,14 +65,15 @@ public class ChainingHashTableTests {
 			switch (rand.nextInt(5)) {
 				case 0:
 					map.insert(key, value);
+					map2.put(key, value);
 					break;
 				case 1:
-					map.find(key);
-					break;
-				case 2:
-					map.find(key);
+					String s1 = map.find(key);
+					String s2 = map2.get(key);
+					assertEquals(s1, s2);
 					break;
 			}
+			assertEquals(map.size(), map2.size());
 		}
 	}
 
@@ -80,7 +82,7 @@ public class ChainingHashTableTests {
 	public void fuzztest2(){
 		Random rand = new Random();
 		ChainingHashTable<Integer, String> map = new ChainingHashTable<>(AVLTree<Integer,String>::new);
-
+		HashMap<Integer, String> map2 = new HashMap<Integer, String>();
 		for (int i = 0; i < 1000; i++) {
 			int key = rand.nextInt();
 			String value = getRandomString(rand.nextInt(100));
@@ -88,14 +90,15 @@ public class ChainingHashTableTests {
 			switch (rand.nextInt(5)) {
 				case 0:
 					map.insert(key, value);
+					map2.put(key, value);
 					break;
 				case 1:
-					map.find(key);
-					break;
-				case 2:
-					map.find(key);
+					String s1 = map.find(key);
+					String s2 = map2.get(key);
+					assertEquals(s1, s2);
 					break;
 			}
+			assertEquals(map.size(), map2.size());
 		}
 	}
 

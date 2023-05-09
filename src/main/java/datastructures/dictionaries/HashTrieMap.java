@@ -1,14 +1,13 @@
 package datastructures.dictionaries;
 
+import cse332.datastructures.containers.Item;
 import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.misc.Dictionary;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
 
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -29,14 +28,29 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
         @Override
         public Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>> iterator() {
-            Iterator itr = pointers.iterator();
-            Dictionary d = new ChainingHashTable<A, HashTrieNode>(MoveToFrontList::new);
-            while (itr.hasNext()){
-                AbstractMap.SimpleEntry i = (AbstractMap.SimpleEntry) itr.next();
-                d.insert(i.getKey(), i.getValue());
-            }
-            return d.iterator();
+            return new HashTrieMapIterator();
         }
+
+        public class HashTrieMapIterator implements Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>>{
+            Iterator<Item<A, HashTrieNode>> itr;
+
+            public HashTrieMapIterator() {
+                this.itr = pointers.iterator();
+            }
+
+            @Override
+            public boolean hasNext(){
+                return itr != null && itr.hasNext();
+            }
+
+            @Override
+            public Entry<A, HashTrieMap<A, K, V>.HashTrieNode> next(){
+                Item<A, HashTrieNode> item = itr.next();
+                AbstractMap.SimpleEntry<A, HashTrieNode> entry = new AbstractMap.SimpleEntry<>(item.key, item.value);
+                return entry;
+            }
+        }
+
     }
 
     public HashTrieMap(Class<K> KClass) {
