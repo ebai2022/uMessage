@@ -31,19 +31,5 @@ public class TopKSort {
                 array[i] = null;
             }
         }
-        /*
-        for (int i = 0; i < array.length; i++){
-            heap.add(array[i]);
-        }
-        int numToTakeOut = heap.size() - k;
-        for (int i = 0; i < numToTakeOut; i++){
-            heap.next();
-            array[array.length - i - 1] = null;
-        }
-        for (int i = 0; i < k; i++){
-            array[i] = heap.next();
-        }
-
-         */
     }
 }
