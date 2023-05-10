@@ -2,14 +2,14 @@ package provided;
 
 import cse332.datastructures.containers.Item;
 import cse332.interfaces.misc.Dictionary;
+import cse332.types.AlphabeticString;
 import datastructures.dictionaries.AVLTree;
 import datastructures.dictionaries.ChainingHashTable;
 import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -110,4 +110,5 @@ public class ChainingHashTableTests {
 		}
 		return builder.toString();
 	}
+
 }
