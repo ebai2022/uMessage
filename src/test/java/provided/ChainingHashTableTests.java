@@ -110,5 +110,4 @@ public class ChainingHashTableTests {
 		}
 		return builder.toString();
 	}
-
 }

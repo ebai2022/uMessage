@@ -152,6 +152,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
 
     // for when my table gets too big for my PRIME_SIZES list to handle
+    /*
     private int nextPrime(){
         int candidatePrime = tableSize + 1; // staring on the next number after the last prime
         while (!isPrime(candidatePrime)){
@@ -172,6 +173,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         }
         return true;
     }
+     */
 
     private void rehash(){
         // checking if we are still in the range of the given prime numbers
@@ -179,7 +181,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         // storing my old table
         Dictionary<K, V>[] oldTable = hashTable;
         if (primeIndex >= PRIME_SIZES.length){
-            hashTable = new Dictionary[nextPrime()];
+            hashTable = new Dictionary[oldTable.length * 2];
         } else {
             hashTable = new Dictionary[PRIME_SIZES[primeIndex]];
         }

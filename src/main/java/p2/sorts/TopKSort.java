@@ -16,6 +16,9 @@ public class TopKSort {
      */
     public static <E> void sort(E[] array, int k, Comparator<E> comparator) {
         WorkList<E> heap = new MinFourHeap<>(comparator);
+        if (k > array.length){
+            k = array.length;
+        }
         for (int i = 0; i < array.length; i++){
             if (heap.size() < k){
                 heap.add(array[i]);

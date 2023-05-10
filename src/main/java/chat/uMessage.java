@@ -18,18 +18,17 @@ import java.util.function.Supplier;
 
 public class uMessage {
     private static final int N = 3;
-    private static final String CORPUS = "corpus/eggs.txt";
+    private static final String CORPUS = "corpus/irc.corpus";
     // Use .binarySearchTreeConstructor(); if you want to test things since it is an implementation we provide and is guaranteed to work
     // Other examples:
     // .trieConstructor(NGram.class);
     // .trieConstructor(AlphabeticString.class);
     // .hashtableConstructor(NGramTester.avlTreeConstructor());
     // .hashtableConstructor(NGramTester.binarySearchTreeConstructor());
-    // .binarySearchTreeConstructor()
     private static final Supplier<Dictionary<NGram, Dictionary<AlphabeticString, Integer>>> NEW_OUTER = NGramTester
-            .trieConstructor(NGram.class);;;
+            .hashtableConstructor(NGramTester.avlTreeConstructor());;;
     private static final Supplier<Dictionary<AlphabeticString, Integer>> NEW_INNER = NGramTester
-            .trieConstructor(AlphabeticString.class);
+            .hashtableConstructor(NGramTester.avlTreeConstructor());
 
     /*
      *
